@@ -1,123 +1,123 @@
 # 📡 CANSApp – Context-Aware Network Selection for Android
 
-**CANSApp** (Context-Aware Network Selection) é um aplicativo Android que implementa um **mecanismo de seleção dinâmica de interfaces de rede** baseado em **análise de contexto**, com foco em **handover vertical** em **redes sem fio heterogêneas** (Wi-Fi, 4G/5G e Bluetooth).
+**CANSApp** (Context-Aware Network Selection) is an Android application that implements a **context-aware network interface selection mechanism**, focusing on **vertical handover** in **heterogeneous wireless networks** such as **Wi-Fi, 4G/5G, and Bluetooth**.
 
-O projeto é uma implementação prática, em Android, do algoritmo proposto em:
+This project is a practical Android implementation of the algorithm proposed in:
 
 > Monteiro et al., *Context-aware network selection in heterogeneous wireless networks*, Computer Communications, 2019.
 
 ---
 
-## 🎯 Objetivo do Projeto
+## 🎯 Project Objective
 
-Desenvolver um aplicativo Android capaz de:
+The goal of CANSApp is to develop an Android application capable of:
 
-- Coletar informações de **contexto do dispositivo, usuário e rede**
-- Identificar **cenários de uso** em tempo quase real
-- Selecionar automaticamente a **melhor interface de rede**
-- Minimizar:
-  - Perdas de conectividade
-  - Consumo de energia
-  - Custo de comunicação
-- Garantir **mobilidade transparente** durante o deslocamento do usuário
-
----
-
-## 🧠 Conceitos-Chave
-
-- **Handover Vertical**: troca de conexão entre tecnologias distintas (ex.: Wi-Fi → 5G)
-- **Ciência de Contexto (Context-Aware Computing)**
-- **Redes Heterogêneas (HetNets)**
-- **Seleção Inteligente de Interface de Rede**
+- Collecting **context information** from the device, user, and network
+- Identifying **usage scenarios** in near real time
+- Automatically selecting the **best available network interface**
+- Minimizing:
+  - Connectivity disruptions
+  - Energy consumption
+  - Communication costs
+- Providing **transparent mobility** during user movement
 
 ---
 
-## 🏗️ Arquitetura do Sistema
+## 🧠 Key Concepts
 
-O CANSApp é implementado como um **serviço Android em segundo plano**, organizado segundo o padrão **MVC (Model–View–Controller)**.
+- **Vertical Handover**: switching connectivity between different access technologies (e.g., Wi-Fi → 5G)
+- **Context-Aware Computing**
+- **Heterogeneous Networks (HetNets)**
+- **Intelligent Network Interface Selection**
 
-### 📐 Componentes Principais
+---
+
+## 🏗️ System Architecture
+
+CANSApp is implemented as a **background Android service**, following the **MVC (Model–View–Controller)** architectural pattern.
+
+### 📐 Main Components
 
 #### 🔹 Model
 - `DeviceMobile`
-  - Armazena o contexto atual do dispositivo
-  - Velocidade de deslocamento
-  - Nível de bateria
-  - Estado da tela
-  - Consumo de banda
-  - Interfaces disponíveis
+  - Stores the current device context
+  - User speed
+  - Battery level
+  - Screen state
+  - Bandwidth usage
+  - Available network interfaces
 - `WirelessNet`
-  - Representa interfaces de rede (Wi-Fi, 5G, Bluetooth)
-  - RSSI, frequência, conectividade e pontuação
+  - Represents wireless interfaces (Wi-Fi, 5G, Bluetooth)
+  - RSSI, frequency, connectivity state, and scoring attributes
 
 #### 🔹 Controller
 - `CANSController`
-  - Aquisição de informações de contexto
-  - Identificação do cenário
-  - Seleção da melhor interface de rede
+  - Context information acquisition
+  - Context identification
+  - Network interface selection
 - `ServiceCANS`
-  - Serviço Android executado em background
-  - Ciclo de execução a cada **5 segundos**
+  - Android background service
+  - Execution cycle every **5 seconds**
 
 #### 🔹 View
-- Activities Android:
+- Android Activities:
   - Splash Screen
-  - Tela principal com informações de contexto
+  - Main screen displaying context information
 
 ---
 
-## 📊 Informações de Contexto Coletadas
+## 📊 Context Information Collected
 
-| Contexto | API Android Utilizada |
-|--------|----------------------|
-| Velocidade do usuário | `LocationManager`, `LocationListener` |
-| Nível de bateria | `BatteryManager` |
-| Estado da tela | `PowerManager` |
-| Consumo de banda | `ConnectivityManager`, `NetworkCapabilities` |
-| Wi-Fi | `WifiManager` |
+| Context Data | Android API Used |
+|-------------|------------------|
+| User speed | `LocationManager`, `LocationListener` |
+| Battery level | `BatteryManager` |
+| Screen state | `PowerManager` |
+| Bandwidth usage | `ConnectivityManager`, `NetworkCapabilities` |
+| Wi-Fi networks | `WifiManager` |
 | Bluetooth | `BluetoothManager`, `BluetoothAdapter` |
 
 ---
 
-## 🧩 Cenários de Contexto Identificados
+## 🧩 Identified Context Scenarios
 
-O algoritmo classifica o contexto do usuário em **três políticas principais**:
+The algorithm classifies user context into **three main policies**:
 
 ### 🔵 Throughput
-- Prioriza **alta largura de banda**
-- Preferência:  
+- Prioritizes **high bandwidth**
+- Interface preference:  
   **Wi-Fi → 5G → Bluetooth**
 
 ### 🟢 PowerSave
-- Prioriza **economia de energia**
-- Preferência:  
+- Prioritizes **energy efficiency**
+- Interface preference:  
   **Bluetooth → Wi-Fi → 5G**
 
 ### 🟠 Coverage
-- Prioriza **alta cobertura**
-- Preferência:  
+- Prioritizes **maximum coverage**
+- Interface preference:  
   **5G → Wi-Fi → Bluetooth**
 
 ---
 
-## 🔁 Fluxo de Execução
+## 🔁 Execution Flow
 
-1. Coleta das informações de contexto
-2. Identificação do cenário atual
-3. Seleção da melhor interface disponível
-4. Impressão dos dados no log do Android (`Logcat`)
-5. Repetição automática a cada 5 segundos
+1. Context information acquisition
+2. Context identification
+3. Best interface selection
+4. Context and decision logging via Android `Logcat`
+5. Automatic repetition every 5 seconds
 
 ---
 
-## 🧪 Testes e Validação
+## 🧪 Testing and Validation
 
-- Testes realizados no **emulador do Android Studio**
-- Simulação de:
-  - Deslocamento via GPS
-  - Alteração do nível de bateria
-  - Ativação/desativação da tela
-- Validação via **logs do sistema** com a tag:
+- Tests conducted using the **Android Studio emulator**
+- Simulated scenarios:
+  - User movement via GPS
+  - Battery level variations
+  - Screen on/off states
+- Validation through **system logs** using the tag:
 
 ```text
 [CANSAPP]

@@ -4,13 +4,23 @@ CC := gcc
 # Bibliotecas via pkg-config
 # =========================
 PKG_LIBS := \
-	libnm-util \
-	libnm-glib \
+	libnm \
 	libgps \
 	xcb-dpms \
 	x11 \
 	glib-2.0 \
-	dbus-1
+	dbus-1 \
+	dbus-glib-1 \
+	glib-2.0 \
+	libgps \
+	xcb \
+	xcb-dpms \
+	xext
+#to oldest version linux replace libnm to follow
+#libnm--util \
+#libnm-glib \
+
+
 
 PKG_CFLAGS := $(shell pkg-config --libs --cflags $(PKG_LIBS))
 PKG_LDFLAGS := $(shell pkg-config --libs $(PKG_LIBS))
@@ -59,7 +69,7 @@ check-libs:
 # Build
 # =========================
 $(TARGET): $(OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) -liw -lm -lacpi
 
 src/%.o: src/%.c
 	$(CC) $(LDFLAGS) -c $< -o $@

@@ -18,13 +18,12 @@
 #include <NetworkManager.h>
 
 
-
-enum {
+enum ifacetype{
 	ETHERNET,
 	WIFI,
 	BLUETOOTH,
 	IFACE3G
-} ifacetype;
+};
 
 typedef struct iface_t{
 

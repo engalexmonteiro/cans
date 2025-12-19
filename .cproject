@@ -21,13 +21,16 @@
 							<builder buildPath="${workspace_loc:/cans}/Debug" id="cdt.managedbuild.target.gnu.builder.exe.debug.62994514" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1396329787" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.543409585" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
-								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1137446357" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
-								<option defaultValue="gnu.cpp.compiler.debugging.level.max" id="gnu.cpp.compiler.exe.debug.option.debugging.level.200925985" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1137446357" name="Optimization level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+								<option defaultValue="gnu.cpp.compiler.debugging.level.max" id="gnu.cpp.compiler.exe.debug.option.debugging.level.200925985" name="Debug level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1444169852" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.209448490" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
-								<option defaultValue="gnu.c.debugging.level.max" id="gnu.c.compiler.exe.debug.option.debugging.level.312801076" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.209448490" name="Optimization level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option defaultValue="gnu.c.debugging.level.max" id="gnu.c.compiler.exe.debug.option.debugging.level.312801076" name="Debug level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.1886912503" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="/usr/include/libmount"/>
+									<listOptionValue builtIn="false" value="/usr/include/blkid"/>
+									<listOptionValue builtIn="false" value="/usr/lib/x86_64-linux-gnu/dbus-1.0/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/libnm"/>
 									<listOptionValue builtIn="false" value="/usr/lib/x86_64-linux-gnu/dbus-1.0/include/"/>
 									<listOptionValue builtIn="false" value="/usr/include/dbus-1.0"/>
@@ -45,24 +48,23 @@
 									<listOptionValue builtIn="false" value="/usr/include/NetworkManager"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.libs.149281472" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
-									<listOptionValue builtIn="false" value="nm"/>
-									<listOptionValue builtIn="false" value="nm-glib"/>
+									<listOptionValue builtIn="false" value="Xext"/>
+									<listOptionValue builtIn="false" value="xcb-dpms"/>
 									<listOptionValue builtIn="false" value="xcb"/>
+									<listOptionValue builtIn="false" value="X11"/>
+									<listOptionValue builtIn="false" value="nm"/>
+									<listOptionValue builtIn="false" value="gio-2.0"/>
+									<listOptionValue builtIn="false" value="gps"/>
+									<listOptionValue builtIn="false" value="dbus-glib-1"/>
+									<listOptionValue builtIn="false" value="gobject-2.0"/>
+									<listOptionValue builtIn="false" value="glib-2.0"/>
+									<listOptionValue builtIn="false" value="dbus-1"/>
+									<listOptionValue builtIn="false" value="bluetooth"/>
 									<listOptionValue builtIn="false" value="Xext"/>
 									<listOptionValue builtIn="false" value="Xdmcp"/>
-									<listOptionValue builtIn="false" value="X11"/>
-									<listOptionValue builtIn="false" value="xcb-dpms"/>
 									<listOptionValue builtIn="false" value="iw"/>
 									<listOptionValue builtIn="false" value="acpi"/>
 									<listOptionValue builtIn="false" value="m"/>
-									<listOptionValue builtIn="false" value="gps"/>
-									<listOptionValue builtIn="false" value="bluetooth"/>
-									<listOptionValue builtIn="false" value="dbus-glib-1"/>
-									<listOptionValue builtIn="false" value="dbus-1"/>
-									<listOptionValue builtIn="false" value="gobject-2.0"/>
-									<listOptionValue builtIn="false" value="gio-2.0"/>
-									<listOptionValue builtIn="false" value="glib-2.0"/>
-									<listOptionValue builtIn="false" value="nm-util"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.481320785" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -80,7 +82,44 @@
 					</sourceEntries>
 				</configuration>
 			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="org.eclipse.cdt.managedbuilder.pkgconfig.extSettings" factoryId="org.eclipse.cdt.core.extension.container.factory">
+					<externalSetting contentTypes="org.eclipse.cdt.managedbuilder.core.compiledObjectFile">
+						<entry flags="UNDEFINED" kind="libraryFile" name="bluetooth" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="dbus-1" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="dbus-glib-1" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="gobject-2.0" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="glib-2.0" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="gps" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="nm" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="gio-2.0" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="X11" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="xcb" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="xcb-dpms" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="UNDEFINED" kind="libraryFile" name="Xext" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+					<externalSetting contentTypes="org.eclipse.cdt.core.cSource:org.eclipse.cdt.core.cxxSource">
+						<entry flags="NONE" kind="includePath" name="/usr/include/libmount"/>
+						<entry flags="NONE" kind="includePath" name="/usr/include/blkid"/>
+						<entry flags="NONE" kind="includePath" name="/usr/lib/x86_64-linux-gnu/dbus-1.0/include"/>
+						<entry flags="NONE" kind="includePath" name="/usr/include/libnm"/>
+						<entry flags="NONE" kind="includePath" name="/usr/lib/x86_64-linux-gnu/dbus-1.0/include/"/>
+						<entry flags="NONE" kind="includePath" name="/usr/include/dbus-1.0"/>
+						<entry flags="NONE" kind="includePath" name="/usr/lib/x86_64-linux-gnu/glib-2.0/include"/>
+						<entry flags="NONE" kind="includePath" name="/usr/include/libnm-glib"/>
+						<entry flags="NONE" kind="includePath" name="/usr/include/glib-2.0"/>
+						<entry flags="NONE" kind="includePath" name="/usr/include/NetworkManager"/>
+						<entry flags="BUILTIN" kind="includePath" name="/usr/include/dbus-1.0"/>
+						<entry flags="BUILTIN" kind="includePath" name="/usr/lib/x86_64-linux-gnu/dbus-1.0/include"/>
+						<entry flags="BUILTIN" kind="includePath" name="/usr/include/glib-2.0"/>
+						<entry flags="BUILTIN" kind="includePath" name="/usr/lib/x86_64-linux-gnu/glib-2.0/include"/>
+						<entry flags="BUILTIN" kind="includePath" name="/usr/include/libnm"/>
+						<entry flags="BUILTIN" kind="includePath" name="/usr/include/libmount"/>
+						<entry flags="BUILTIN" kind="includePath" name="/usr/include/blkid"/>
+					</externalSetting>
+				</externalSettings>
+			</storageModule>
+			<storageModule adwaita-icon-theme="false" applewmproto="false" bash-completion="false" bigreqsproto="false" blkid="false" bluez="true" compositeproto="false" damageproto="false" dbus-1="true" dbus-glib-1="true" dmxproto="false" dpmsproto="false" dri2proto="false" dri3proto="false" fixesproto="false" fontsproto="false" fontutil="false" geoclue-2.0="false" gio-2.0="false" gio-unix-2.0="false" glib-2.0="true" glproto="false" gmodule-2.0="false" gmodule-export-2.0="false" gmodule-no-export-2.0="false" gobject-2.0="false" grilo-plugins-0.3="false" gthread-2.0="false" hwdata="false" ibus-table="false" inputproto="false" iso-codes="false" kbproto="false" libcrypt="false" libffi="false" libgps="true" libnm="true" liboping="false" libpcre2-16="false" libpcre2-32="false" libpcre2-8="false" libpcre2-posix="false" libselinux="false" libsepol="false" libxcrypt="false" m17n-db="false" mobile-broadband-provider-info="false" moduleId="packages" mount="false" poppler-data="false" presentproto="false" pthread-stubs="false" randrproto="false" recordproto="false" renderproto="false" resourceproto="false" scrnsaverproto="false" shared-mime-info="false" systemd="false" tecla="false" udev="false" uuid="false" videoproto="false" x11="true" xau="false" xbitmaps="false" xcb="true" xcb-dpms="true" xcmiscproto="false" xdmcp="false" xext="true" xextproto="false" xf86bigfontproto="false" xf86dgaproto="false" xf86driproto="false" xf86vidmodeproto="false" xineramaproto="false" xkbcomp="false" xkeyboard-config="false" xorg-sgml-doctools="false" xorg-wacom="false" xproto="false" xtrans="false" xwayland="false" xwaylandproto="false" yelp-xsl="false" zlib="false"/>
 		</cconfiguration>
 		<cconfiguration id="cdt.managedbuild.config.gnu.exe.release.735697378">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.release.735697378" moduleId="org.eclipse.cdt.core.settings" name="Release">
@@ -102,12 +141,12 @@
 							<builder buildPath="${workspace_loc:/cans}/Release" id="cdt.managedbuild.target.gnu.builder.exe.release.1198665713" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.exe.release"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.883360807" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.1438959507" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.release">
-								<option id="gnu.cpp.compiler.exe.release.option.optimization.level.580967517" name="Optimization Level" superClass="gnu.cpp.compiler.exe.release.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
-								<option defaultValue="gnu.cpp.compiler.debugging.level.none" id="gnu.cpp.compiler.exe.release.option.debugging.level.1487994458" name="Debug Level" superClass="gnu.cpp.compiler.exe.release.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.exe.release.option.optimization.level.580967517" name="Optimization level" superClass="gnu.cpp.compiler.exe.release.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
+								<option defaultValue="gnu.cpp.compiler.debugging.level.none" id="gnu.cpp.compiler.exe.release.option.debugging.level.1487994458" name="Debug level" superClass="gnu.cpp.compiler.exe.release.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.release.895495985" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.release">
-								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.exe.release.option.optimization.level.1524047508" name="Optimization Level" superClass="gnu.c.compiler.exe.release.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
-								<option defaultValue="gnu.c.debugging.level.none" id="gnu.c.compiler.exe.release.option.debugging.level.695493863" name="Debug Level" superClass="gnu.c.compiler.exe.release.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.exe.release.option.optimization.level.1524047508" name="Optimization level" superClass="gnu.c.compiler.exe.release.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option defaultValue="gnu.c.debugging.level.none" id="gnu.c.compiler.exe.release.option.debugging.level.695493863" name="Debug level" superClass="gnu.c.compiler.exe.release.option.debugging.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2131131160" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.release.1380047673" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.release">
@@ -144,5 +183,12 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/cans"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/cans"/>
+		</configuration>
+	</storageModule>
 </cproject>

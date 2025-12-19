@@ -9,81 +9,76 @@
 #define TRYS 20
 
 int getGPSData(struct gps_data_t *gpsdata){
-	int cont = 0;
 
-    //connect to GPSd
-    if(gps_open("localhost", DEFAULT_GPSD_PORT, gpsdata)<0){
-        fprintf(stderr,"Could not connect to GPSd\n");
-        return(-1);
-    }
+		int cont = 0;
+		int rc;
 
-    //register for updates
-    gps_stream(gpsdata, WATCH_ENABLE | WATCH_JSON, NULL);
+		// 1. Conectar ao GPSd
+		// O quarto argumento é para o nome do dispositivo, geralmente NULL para localhost
+		if (gps_open("localhost", DEFAULT_GPSD_PORT, gpsdata) < 0) {
+			fprintf(stderr, "Erro: Não foi possível conectar ao GPSd\n");
+			return -1;
+		}
 
+		// 2. Registrar para atualizações
+		gps_stream(gpsdata, WATCH_ENABLE | WATCH_JSON, NULL);
 
-    //fprintf(stderr,"Waiting for gps lock.");
-    //when status is >0, you have data.
-    while(gpsdata->status == 0 && cont < TRYS){
-        //block for up to .5 seconds
-        if (gps_waiting(gpsdata, 50000)){
-            //dunno when this would happen but its an error
-            if(gps_read(gpsdata)==-1){
-                fprintf(stderr,"GPSd Error\n");
-                gps_stream(gpsdata, WATCH_DISABLE, NULL);
-                gps_close(gpsdata);
-                return(-1);
-                break;
-            }
-            else{
-                //status>0 means you have data
-                if(gpsdata->status>0){
-                    //sometimes if your GPS doesnt have a fix, it sends you data anyways
-                    //the values for the fix are NaN. this is a clever way to check for NaN.
-                    if(gpsdata->fix.longitude!=gpsdata->fix.longitude || gpsdata->fix.altitude!=gpsdata->fix.altitude){
-                        //fprintf(stderr,"Could not get a GPS fix.\n");
-                        gps_stream(gpsdata, WATCH_DISABLE, NULL);
-                        gpsdata->fix.altitude = 0;
-                        gpsdata->fix.latitude = 0;
-                        gpsdata->fix.speed = 0;
-                        gps_close(gpsdata);
-                        return(-1);
-                    }
-                    //otherwise you have a legitimate fix!
-                    //else
-                        //fprintf(stderr,"\n");
-                }
-                //if you don't have any data yet, keep waiting for it.
-                //else
-                    //fprintf(stderr,".");
-            }
-        }
-        //apparently gps_stream disables itself after a few seconds.. in this case, gps_waiting returns false.
-        //we want to re-register for updates and keep looping! we dont have a fix yet.
-        else
-            gps_stream(gpsdata, WATCH_ENABLE | WATCH_JSON, NULL);
+		// 3. Loop de leitura
+		while (cont < TRYS) {
+			// Nas versões atuais, verificamos se há dados esperando com timeout (microssegundos)
+			// O timeout aqui é de 500ms (500000 microsegundos)
+			if (gps_waiting(gpsdata, 500000)) {
 
-        cont++;
-        //just a sleep for good measure.
-//        sleep(1);
-    }
-    //cleanup
-    gps_stream(gpsdata, WATCH_DISABLE, NULL);
-    gps_close(gpsdata);
+				// gps_read agora retorna o número de bytes lidos ou -1
+				if ((rc = gps_read(gpsdata, NULL, 0)) == -1) {
+					fprintf(stderr, "Erro na leitura do GPSd\n");
+					break;
+				}
 
-    return 0;
+				// Verificamos se temos um fix válido (status > STATUS_NO_FIX)
+				// Em versões recentes, status fica dentro da estrutura fix
+				if (gpsdata->fix.status >= STATUS_GPS && gpsdata->fix.mode >= MODE_2D) {
+
+					// Verificação de segurança para NaN usando isnan() da math.h
+					if (isnan(gpsdata->fix.latitude) || isnan(gpsdata->fix.longitude)) {
+						// Sem fix real ainda
+						continue;
+					}
+
+					// Fix legítimo encontrado!
+					// Podemos sair do loop
+					goto success;
+				}
+			}
+
+			cont++;
+		}
+
+		// Se chegou aqui, falhou em obter o fix
+		gps_stream(gpsdata, WATCH_DISABLE, NULL);
+		gps_close(gpsdata);
+		return -1;
+
+		success:
+		// Limpeza antes de retornar sucesso
+		gps_stream(gpsdata, WATCH_DISABLE, NULL);
+		gps_close(gpsdata);
+		return 0;
 }
+
+
 
 
 void debugDump(struct gps_data_t *gpsdata){
-    fprintf(stderr,"Longitude: %lf\nLatitude: %lf\nAltitude: %lf\nSpeed: %lf m/s\nAccuracy: %lf\n\n",
-                gpsdata->fix.latitude, gpsdata->fix.longitude, gpsdata->fix.altitude,gpsdata->fix.speed,
-                (gpsdata->fix.epx>gpsdata->fix.epy)?gpsdata->fix.epx:gpsdata->fix.epy);
+	fprintf(stderr,"Longitude: %lf\nLatitude: %lf\nAltitude: %lf\nSpeed: %lf m/s\nAccuracy: %lf\n\n",
+			gpsdata->fix.latitude, gpsdata->fix.longitude, gpsdata->fix.altitude,gpsdata->fix.speed,
+			(gpsdata->fix.epx>gpsdata->fix.epy)?gpsdata->fix.epx:gpsdata->fix.epy);
 }
 
 void print_position(struct gps_data_t *gpsdata){
-    printf("%lf\t%lf\t%lf\t%lf\t%lf\n",
-                gpsdata->fix.latitude, gpsdata->fix.longitude, gpsdata->fix.altitude,gpsdata->fix.speed,
-                (gpsdata->fix.epx>gpsdata->fix.epy)?gpsdata->fix.epx:gpsdata->fix.epy);
+	printf("%lf\t%lf\t%lf\t%lf\t%lf\n",
+			gpsdata->fix.latitude, gpsdata->fix.longitude, gpsdata->fix.altitude,gpsdata->fix.speed,
+			(gpsdata->fix.epx>gpsdata->fix.epy)?gpsdata->fix.epx:gpsdata->fix.epy);
 }
 
 
@@ -109,9 +104,9 @@ void print_all_position(int sample, struct gps_data_t *gpsdata){
 }
 
 void fprint_position(FILE *file , struct gps_data_t *gpsdata){
-    fprintf(file,"%lf\t%lf\t%lf\t%lf\t%lf\n",
-                gpsdata->fix.latitude, gpsdata->fix.longitude, gpsdata->fix.altitude,gpsdata->fix.speed,
-                (gpsdata->fix.epx>gpsdata->fix.epy)?gpsdata->fix.epx:gpsdata->fix.epy);
+	fprintf(file,"%lf\t%lf\t%lf\t%lf\t%lf\n",
+			gpsdata->fix.latitude, gpsdata->fix.longitude, gpsdata->fix.altitude,gpsdata->fix.speed,
+			(gpsdata->fix.epx>gpsdata->fix.epy)?gpsdata->fix.epx:gpsdata->fix.epy);
 }
 
 void fprint_all_position(int sample, struct gps_data_t *gpsdata,char* namefile) {

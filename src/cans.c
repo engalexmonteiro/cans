@@ -95,7 +95,7 @@ struct option longoptions[] = {
 
 int help_info(){
 
-	printf("\nMESISC - MEchanism Smart Interfaces Selection based in Context\n");
+	printf("\nCANS - Context-Aware Network Selection\n");
 	printf("\nsmsic [OPTION] [ARGUMENT]\n");
 	printf("OPTIONS:\n\t\t-n [value]\t: number of samples");
 	printf("\n\t\t-i [time]\t: interval between the samples in seconds");

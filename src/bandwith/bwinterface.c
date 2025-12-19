@@ -88,7 +88,7 @@ print_max(interface_t * interface)
 		max_whole++;
 		max_part -= 1000;
 	}
-	printf("        max:      %7lu.%03u     %7lu.%03u     %7lu.%03u \n",
+	printf("        max:      %7lu.%03lu     %7lu.%03lu     %7lu.%03lu \n",
 		   (*interface)->rx_max_whole, (*interface)->rx_max_part,
 		   (*interface)->tx_max_whole, (*interface)->tx_max_part,
 		   max_whole, max_part);

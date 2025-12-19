@@ -136,7 +136,7 @@ int found_net(char *net){
 
         if(dir)
         {
-                while(drnt = readdir(dir))
+                while((drnt = readdir(dir)))
                 {
             		ok = !strcmp(drnt->d_name,net);
 
@@ -159,7 +159,9 @@ int get_info_ifaces(struct mobile_device_t *md){
 	const GPtrArray *devices;
 	NMClient *client;
 
-	g_type_init ();
+	#if !GLIB_CHECK_VERSION(2, 35, 0)
+		g_type_init();
+	#endif
 
 	client = nm_client_new(NULL,NULL);
 

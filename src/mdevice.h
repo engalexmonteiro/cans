@@ -22,7 +22,7 @@
 #include <gps.h>
 #include <sys/time.h>
 
-#define SIZEQUERY 150
+#define SIZEQUERY 250
 #define IFNAME "wlan0"
 
 #define INT_WIFI 15

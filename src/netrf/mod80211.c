@@ -1049,7 +1049,6 @@ int get_rssi_info(char* ifname, wireless_scan_mi* wifinet){
 
 		get_info(skfd,ifname,&info);
 
-		char 			buffer[100];
 		int 				 level  = -100;
 
 		wifinet->connected  = (int)info.b.freq;
@@ -1060,9 +1059,7 @@ int get_rssi_info(char* ifname, wireless_scan_mi* wifinet){
 				level  = info.stats.qual.level - 0x100;
 				iw_sockets_close(skfd);
 				return level;
-			}else
-				iw_sockets_close(skfd);
-				return level;
+			}
 
 		}
 
@@ -1617,11 +1614,11 @@ int varredura(wireless_scan_mi_list* list){
 	timeinfo= localtime(&currentTime);
 
 	/* Apresenta a hora atual no formato horas:minutos:segundos */
-	//printf("\nData: %02d/%02d/%d Hora atual: %02d:%02d:%02d\n", timeinfo->tm_mday, timeinfo->tm_mon, timeinfo->tm_year+1900,timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+	printf("\nData: %02d/%02d/%d Hora atual: %02d:%02d:%02d\n", timeinfo->tm_mday, timeinfo->tm_mon, timeinfo->tm_year+1900,timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 
-	//print_classi_network(list);
+	print_classi_network(list);
 
-	//print_scan_mi(list);
+	print_scan_mi(list);
 
 	return 0;
 }

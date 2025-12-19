@@ -331,7 +331,6 @@ int manager_iface3g(int i){
 	static int b3g_enable=0;
 	static struct timeval start, end;
 	struct tm *temp;
-	static double time_sleep;
 	FILE *file_3g;
 
 
@@ -509,9 +508,8 @@ int horizontal_handover_bluetooth(int i){
 	static float speed_dm = 0;
 	static int time_for_disable = 0, time_for_enable = 0;
 	int 	blueth_enable;
-	int     control_process;
 	struct timeval start, end;
-	double time_sleep;
+
 	struct tm *temp;
 
 	FILE *file_blue;
@@ -534,7 +532,7 @@ int horizontal_handover_bluetooth(int i){
 	temp = localtime(&start.tv_sec);
 
 	speed_dm = speed;
-	//blueth_enable;
+	blueth_enable = md.bluetooth.connected;
 
 	if(speed_dm <= 0.5){
 

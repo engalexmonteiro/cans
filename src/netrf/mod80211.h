@@ -19,7 +19,7 @@
 
 #include "multinterfaces.h"
 
-#define SIZEQUERY 150
+#define SIZEQUERY 250
 #define OVERLAPFACTOR "fscanais.txt" // this file store the overlap factor of the channels
 #define WIFINETWORKS "varredura.txt" // this file store the wifi network detected
 

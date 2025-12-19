@@ -534,7 +534,7 @@ int horizontal_handover_bluetooth(int i){
 	temp = localtime(&start.tv_sec);
 
 	speed_dm = speed;
-	blueth_enable;
+	//blueth_enable;
 
 	if(speed_dm <= 0.5){
 

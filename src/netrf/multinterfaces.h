@@ -109,6 +109,5 @@ typedef struct wireless_scan_mi_list
 
 
 /* Modes as human readable strings */
-static char *wi_type_device[2] = {"802.11","802.15.1"};
 
 #endif /* MULTINTERFACES_H_ */

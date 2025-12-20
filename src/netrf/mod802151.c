@@ -2392,7 +2392,6 @@ struct {
 	unsigned char *uuid;
 } service[] = {
 	{ "DID",	PNP_INFO_SVCLASS_ID,		NULL,		},
-
 	{ "SP",		SERIAL_PORT_SVCLASS_ID,		add_sp		},
 	{ "DUN",	DIALUP_NET_SVCLASS_ID,		add_dun		},
 	{ "LAN",	LAN_ACCESS_SVCLASS_ID,		add_lan		},
@@ -2705,9 +2704,9 @@ int connect_scan(int sock, int dev_id)
 	*///----
 
 	struct hci_conn_info_req *cr;
-	int8_t rssi;
-	uint8_t lq;
-	int8_t level;
+	int8_t rssi=0;
+	uint8_t lq=0;
+	int8_t level=0;
 
 	uint8_t type=0;
 	//uint8_t reason;

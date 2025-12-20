@@ -359,7 +359,7 @@ int file_for_bw(int i, host_interfaces_t* host_ifaces, char* iface, char *name_f
 	FILE *arquivo;
 	struct tm *temp;
 
-	temp = localtime(&host_ifaces->gth_time);
+	temp = localtime((const time_t *)&host_ifaces->gth_time);
 
 	if(i == 0){
 		arquivo = fopen(name_file,"w");

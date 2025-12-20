@@ -10,24 +10,26 @@
 #include <iwlib.h>
 #include <sys/stat.h>
 
+static const char *wi_type_device[2] = {"802.11", "802.15.1"};
+
 // Tabela de sobreposi����o de canais 802.11b
 static float mtsb[CANAL][CANAL] = {
 
-/* Channel	  1		2	3	  4	   5	6	7	  8    9  10	11	12	  13    14 */
-/* 1 */		{1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00},
-/* 2 */		{0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00},
-/* 3 */		{0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00,0.00},
-/* 4 */		{0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00},
-/* 5 */		{0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00},
-/* 6 */		{0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00},
-/* 7 */		{0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00},
-/* 8 */		{0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00},
-/* 9 */		{0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00},
-/* 10 */	{0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.00},
-/* 11 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.00},
-/* 12 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.22},
-/* 13 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.45},
-/* 14 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.22,0.45,1.00}
+		/* Channel	  1		2	3	  4	   5	6	7	  8    9  10	11	12	  13    14 */
+		/* 1 */		{1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00},
+		/* 2 */		{0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00},
+		/* 3 */		{0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00,0.00},
+		/* 4 */		{0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00,0.00},
+		/* 5 */		{0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00,0.00},
+		/* 6 */		{0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00,0.00},
+		/* 7 */		{0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00,0.00},
+		/* 8 */		{0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00,0.00},
+		/* 9 */		{0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.09,0.00},
+		/* 10 */	{0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.31,0.00},
+		/* 11 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.54,0.00},
+		/* 12 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.77,0.22},
+		/* 13 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.09,0.31,0.54,0.77,1.00,0.45},
+		/* 14 */	{0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.22,0.45,1.00}
 };
 
 
@@ -73,21 +75,21 @@ int freq2canal(double	freq)
 	frequencia = (int)(freq/1000000);
 
 	switch(frequencia){
-		case 2412: return 1;
-		case 2417: return 2;
-		case 2422: return 3;
-		case 2427: return 4;
-		case 2432: return 5;
-		case 2437: return 6;
-		case 2442: return 7;
-		case 2447: return 8;
-		case 2452: return 9;
-		case 2457: return 10;
-		case 2462: return 11;
-		case 2467: return 12;
-		case 2472: return 13;
-		case 2484: return 14;
-		default:  return 0;
+	case 2412: return 1;
+	case 2417: return 2;
+	case 2422: return 3;
+	case 2427: return 4;
+	case 2432: return 5;
+	case 2437: return 6;
+	case 2442: return 7;
+	case 2447: return 8;
+	case 2452: return 9;
+	case 2457: return 10;
+	case 2462: return 11;
+	case 2467: return 12;
+	case 2472: return 13;
+	case 2484: return 14;
+	default:  return 0;
 	}
 }
 
@@ -152,14 +154,14 @@ void verifica_Canaisv2(int* utilizacao, wireless_scan_head* context){
 float fatordesobreposicao(int diferenca){
 
 	switch(diferenca){
-		case 0 : return 1;
-		case 1 : return 0.7272;
-		case 2 : return 0.2714;
-		case 3 : return 0.0375;
-		case 4 : return 0.0054;
-		case 5 : return 0.0008;
-		case 6 : return 0.0002;
-		default: return 0;
+	case 0 : return 1;
+	case 1 : return 0.7272;
+	case 2 : return 0.2714;
+	case 3 : return 0.0375;
+	case 4 : return 0.0054;
+	case 5 : return 0.0008;
+	case 6 : return 0.0002;
+	default: return 0;
 	}
 }
 
@@ -258,68 +260,68 @@ void print_canais_utilizados(int* utilizacao){
 void
 print_freq_value(double	freq)
 {
-  if(freq < 1000)
-    printf("%g", freq);
-  else
-    {
-      char	scale;
-      int	divisor;
+	if(freq < 1000)
+		printf("%g", freq);
+	else
+	{
+		char	scale;
+		int	divisor;
 
-      if(freq >= 1000000000)
-	{
-	  scale = 'G';
-	  divisor = 1000000000;
+		if(freq >= 1000000000)
+		{
+			scale = 'G';
+			divisor = 1000000000;
+		}
+		else
+		{
+			if(freq >= 1000000)
+			{
+				scale = 'M';
+				divisor = 1000000;
+			}
+			else
+			{
+				scale = 'k';
+				divisor = 1000000;
+			}
+		}
+		printf("%g %cHz", freq / divisor, scale);
 	}
-      else
-	{
-	  if(freq >= 1000000)
-	    {
-	      scale = 'M';
-	      divisor = 1000000;
-	    }
-	  else
-	    {
-	      scale = 'k';
-	      divisor = 1000000;
-	    }
-	}
-      printf("%g %cHz", freq / divisor, scale);
-    }
 }
 
 
 void
 print_bitrate(int bitrate)
 {
-  double	rate = bitrate;
-  char		scale;
-  int		divisor;
+	double	rate = bitrate;
+	char		scale;
+	int		divisor;
 
-  if(rate >= 1000000000)
-    {
-      scale = 'G';
-      divisor = 1000000000;
-    }
-  else
-    {
-      if(rate >= 1000000)
+	if(rate >= 1000000000)
 	{
-	  scale = 'M';
-	  divisor = 1000000;
+		scale = 'G';
+		divisor = 1000000000;
 	}
-      else
+	else
 	{
-	  scale = 'k';
-	  divisor = 1000;
+		if(rate >= 1000000)
+		{
+			scale = 'M';
+			divisor = 1000000;
+		}
+		else
+		{
+			scale = 'k';
+			divisor = 1000;
+		}
 	}
-    }
 	printf("%g %cb/s", rate / divisor, scale);
 }
 
 
 void print_iw_scan(wireless_scan_head* context, float* fator_sobreposicao){
 
-	int level ;
+	int level=0;
 	wireless_scan* celula_atual;
 
 	celula_atual = context->result;
@@ -338,7 +340,7 @@ void print_iw_scan(wireless_scan_head* context, float* fator_sobreposicao){
 		printf("\nWifi\t");
 
 		/* Imprime Endere��o f��sico */
-	///	printf("%s\t",iw_saether_ntop(&celula_atual->ap_addr, buffer));
+		///	printf("%s\t",iw_saether_ntop(&celula_atual->ap_addr, buffer));
 
 		celula_atual->b.key_flags |= IW_ENCODE_NOKEY;
 		if(celula_atual->b.key_flags & IW_ENCODE_DISABLED)
@@ -360,7 +362,7 @@ void print_iw_scan(wireless_scan_head* context, float* fator_sobreposicao){
 
 		print_bitrate(celula_atual->maxbitrate.value);
 
-	//	printf("\t%s",iw_operation_mode[celula_atual->b.mode]);
+		//	printf("\t%s",iw_operation_mode[celula_atual->b.mode]);
 
 		printf("\t%0.2f\t",fator_sobreposicao[freq2canal(celula_atual->b.freq)-1]-1.0);
 
@@ -419,100 +421,100 @@ void zerar_vetores(int* utilizacao, float* fator_sobreposicao){
 
 int iw_scan_wifi(wireless_scan_mi_list* list){
 
-		int 				skfd;			/* generic raw socket desc.	*/
-		int 				we_version;
-		wireless_scan_head 	context;
-		int 				cont = 0;
+	int 				skfd;			/* generic raw socket desc.	*/
+	int 				we_version;
+	wireless_scan_head 	context;
+	int 				cont = 0;
 
-		we_version = iw_get_kernel_we_version();
+	we_version = iw_get_kernel_we_version();
 
 
-		if((skfd = iw_sockets_open()) < 0){
-				perror("socket");
-				return -1;
-		}
+	if((skfd = iw_sockets_open()) < 0){
+		perror("socket");
+		return -1;
+	}
 
-				// Varre o espectro
-		iw_scan(skfd,"wlan0",we_version,&context);
+	// Varre o espectro
+	iw_scan(skfd,"wlan0",we_version,&context);
 
-		zerar_vetores(list->channel_util,list->fator_sobreposicao);
+	zerar_vetores(list->channel_util,list->fator_sobreposicao);
 
-		verifica_Canais(list->channel_util,&context);
+	verifica_Canais(list->channel_util,&context);
 
-		// Calcula o Fator de sobreposicao
-		calcula_FatorSbr(list->channel_util,list->fator_sobreposicao);
+	// Calcula o Fator de sobreposicao
+	calcula_FatorSbr(list->channel_util,list->fator_sobreposicao);
 
-		char 			buffer[100];
-		int 				 level ;
-		wireless_scan* celula_atual;
+	char 			buffer[100];
+	int 				 level=0;
+	wireless_scan* celula_atual;
 
-		struct wireless_scan_mi* current_device;
-		struct wireless_scan_mi* old_device;
+	struct wireless_scan_mi* current_device;
+	struct wireless_scan_mi* old_device;
 
-		celula_atual = context.result;
+	celula_atual = context.result;
 
-		while(celula_atual != NULL){
+	while(celula_atual != NULL){
 
-				old_device = current_device;
+		old_device = current_device;
 
-				current_device = (struct wireless_scan_mi *)malloc(sizeof(struct wireless_scan_mi));
+		current_device = (struct wireless_scan_mi *)malloc(sizeof(struct wireless_scan_mi));
 
-				if(list->head_list == NULL)
-					list->head_list = current_device;
-				else
-					old_device->next = current_device;
+		if(list->head_list == NULL)
+			list->head_list = current_device;
+		else
+			old_device->next = current_device;
 
-				/* Imprime Endere��o f��sico */
-				current_device->type = 0;
+		/* Imprime Endere��o f��sico */
+		current_device->type = 0;
 
-				iw_ether_ntop((const struct ether_addr *)&celula_atual->ap_addr.sa_data, buffer);
+		iw_ether_ntop((const struct ether_addr *)&celula_atual->ap_addr.sa_data, buffer);
 
-				strcpy(current_device->mac_address,buffer);
+		strcpy(current_device->mac_address,buffer);
 
-				celula_atual->b.key_flags |= IW_ENCODE_NOKEY;
-				if(celula_atual->b.key_flags & IW_ENCODE_DISABLED)
-					current_device->key = 0;
-				else
-					current_device->key = 1;
+		celula_atual->b.key_flags |= IW_ENCODE_NOKEY;
+		if(celula_atual->b.key_flags & IW_ENCODE_DISABLED)
+			current_device->key = 0;
+		else
+			current_device->key = 1;
 
-				current_device->canal = freq2canal(celula_atual->b.freq);
+		current_device->canal = freq2canal(celula_atual->b.freq);
 
-				current_device->frequencia = (float)celula_atual->b.freq;
+		current_device->frequencia = (float)celula_atual->b.freq;
 
-				current_device->qualidade = (float)(celula_atual->stats.qual.qual/70.0) *100.0;
+		current_device->qualidade = (float)(celula_atual->stats.qual.qual/70.0) *100.0;
 
-				if (celula_atual->stats.qual.level > 64)
-					level  = celula_atual->stats.qual.level - 0x100;
+		if (celula_atual->stats.qual.level > 64)
+			level  = celula_atual->stats.qual.level - 0x100;
 
-				current_device->nivel = level;
+		current_device->nivel = level;
 
-				current_device->maxbitrate = celula_atual->maxbitrate.value;
+		current_device->maxbitrate = celula_atual->maxbitrate.value;
 
-				strcpy(current_device->modo,iw_operation_mode[celula_atual->b.mode]);
+		strcpy(current_device->modo,iw_operation_mode[celula_atual->b.mode]);
 
-				strcpy(current_device->essid,celula_atual->b.essid);
+		strcpy(current_device->essid,celula_atual->b.essid);
 
-				current_device->factor_overlap = (list->fator_sobreposicao[current_device->canal-1]-1);
+		current_device->factor_overlap = (list->fator_sobreposicao[current_device->canal-1]-1);
 
-				if(!(current_device->key) && (current_device->qualidade >= 75.0) && (current_device->nivel> -50))
-						list->factor_diversity++;
+		if(!(current_device->key) && (current_device->qualidade >= 75.0) && (current_device->nivel> -50))
+			list->factor_diversity++;
 
-				current_device->next = NULL;
+		current_device->next = NULL;
 
-				list->end_list = current_device;
+		list->end_list = current_device;
 
-				cont++;
+		cont++;
 
-				celula_atual = celula_atual->next;
-		};
+		celula_atual = celula_atual->next;
+	};
 
-		limpar_iw_scan(&context);
+	limpar_iw_scan(&context);
 
-		iw_sockets_close(skfd);
+	iw_sockets_close(skfd);
 
-		list->size_list = list->size_list + cont;
+	list->size_list = list->size_list + cont;
 
-		return 0;
+	return 0;
 }
 
 int add_ap_wifilist(wireless_scan_mi_list* list,wireless_scan_mi *ap_wifi){
@@ -534,7 +536,7 @@ int add_ap_wifilist(wireless_scan_mi_list* list,wireless_scan_mi *ap_wifi){
 		p = list->head_list;
 		anterior = NULL;
 
-	/*procura posicao para insercao*/
+		/*procura posicao para insercao*/
 		while(p != NULL && p->score < current_device->score)
 		{
 			anterior = p;
@@ -558,21 +560,158 @@ int add_ap_wifilist(wireless_scan_mi_list* list,wireless_scan_mi *ap_wifi){
 
 int iw_scan_wifiv2(char *ifname, wireless_scan_mi_list* list){
 
-		int 				skfd;			/* generic raw socket desc.	*/
-		int 				we_version;
-		wireless_scan_head 	context;
-		int 				cont = 0;
+	int 				skfd;			/* generic raw socket desc.	*/
+	int 				we_version;
+	wireless_scan_head 	context;
+	int 				cont = 0;
 
-		we_version = iw_get_kernel_we_version();
+	we_version = iw_get_kernel_we_version();
 
 
-		if((skfd = iw_sockets_open()) < 0){
-				perror("socket");
-				return -1;
+	if((skfd = iw_sockets_open()) < 0){
+		perror("socket");
+		return -1;
+	}
+
+	// Varre o espectro
+	iw_scan(skfd,ifname,we_version,&context);
+
+	zerar_vetores(list->channel_util,list->fator_sobreposicao);
+
+	verifica_Canaisv2(list->channel_util,&context);
+
+	// Calcula o Fator de sobreposicao
+	calcula_FatorSbr(list->channel_util,list->fator_sobreposicao);
+
+	char 			buffer[100];
+	int 				 level =0;
+	wireless_scan* celula_atual;
+
+	struct wireless_scan_mi* p;
+	struct wireless_scan_mi* current_device;
+	struct wireless_scan_mi* anterior;
+
+	//struct wireless_scan_mi* old_device;
+
+	celula_atual = context.result;
+
+	while(celula_atual != NULL){
+
+		//				old_device = current_device;
+
+		current_device = (struct wireless_scan_mi *)malloc(sizeof(struct wireless_scan_mi));
+
+		//				if(list->head_list == NULL)
+		//				list->head_list = current_device;
+		//		else
+		//		old_device->next = current_device;
+
+
+		/* Imprime Endere��o f��sico */
+		current_device->type = 0;
+
+		iw_ether_ntop((const struct ether_addr *) &celula_atual->ap_addr.sa_data, buffer);
+		strcpy(current_device->mac_address,buffer);
+
+		celula_atual->b.key_flags |= IW_ENCODE_NOKEY;
+		if(celula_atual->b.key_flags & IW_ENCODE_DISABLED)
+			current_device->key = 0;
+		else
+			current_device->key = 1;
+
+		current_device->canal = freq2canal(celula_atual->b.freq);
+
+		current_device->frequencia = (float)celula_atual->b.freq;
+
+		current_device->qualidade = (float)(celula_atual->stats.qual.qual/70.0) *100.0;
+
+		if (celula_atual->stats.qual.level > 64)
+			level  = celula_atual->stats.qual.level - 0x100;
+
+		current_device->nivel = level;
+
+		current_device->maxbitrate = celula_atual->maxbitrate.value;
+
+		strcpy(current_device->modo,iw_operation_mode[celula_atual->b.mode]);
+
+		strcpy(current_device->essid,celula_atual->b.essid);
+
+		current_device->factor_overlap = (list->fator_sobreposicao[current_device->canal-1] - (100 + current_device->nivel));
+
+		if(!(current_device->key) && (current_device->qualidade >= 75.0) && (current_device->nivel> -60))
+			list->factor_diversity++;
+
+
+		if(list->head_list == NULL){
+			current_device->next = NULL;
+			list->head_list = current_device;
+		}
+		else{
+
+			p = list->head_list;
+			anterior = NULL;
+
+			/*procura posicao para insercao*/
+			while(p != NULL && p->factor_overlap < current_device->factor_overlap)
+			{
+				anterior = p;
+				p = p->next;
+			}
+
+			if(anterior == NULL){
+				current_device->next = list->head_list;
+				list->head_list = current_device;
+			}
+			else{
+				anterior->next = current_device;
+				current_device->next = p;
+			}
+
 		}
 
-				// Varre o espectro
-		iw_scan(skfd,ifname,we_version,&context);
+		list->end_list = current_device;
+
+		cont++;
+
+		celula_atual = celula_atual->next;
+	};
+
+	limpar_iw_scan(&context);
+
+	iw_sockets_close(skfd);
+
+	gettimeofday(&list->time,NULL);
+
+	verify_best_channels(list->melhores_canais,list->fator_sobreposicao);
+
+	score_net_snr(list);
+
+	list->size_list = list->size_list + cont;
+
+	return 0;
+}
+
+int iw_scan_wifiv3(char *ifname, wireless_scan_mi_list* list){
+
+	int 				skfd;			/* generic raw socket desc.	*/
+	int 				we_version;
+	wireless_scan_head 	context;
+	int 				cont = 0;
+
+	we_version = iw_get_kernel_we_version();
+
+
+	if((skfd = iw_sockets_open()) < 0){
+		perror("socket");
+		return -1;
+	}
+
+	// Varre o espectro
+	iw_scan(skfd,ifname,we_version,&context);
+
+	gettimeofday(&list->time,NULL);
+
+	if(context.result != NULL){
 
 		zerar_vetores(list->channel_util,list->fator_sobreposicao);
 
@@ -582,28 +721,48 @@ int iw_scan_wifiv2(char *ifname, wireless_scan_mi_list* list){
 		calcula_FatorSbr(list->channel_util,list->fator_sobreposicao);
 
 		char 			buffer[100];
-		int 				 level ;
+		int 				 level =0;
 		wireless_scan* celula_atual;
 
 		struct wireless_scan_mi* p;
 		struct wireless_scan_mi* current_device;
 		struct wireless_scan_mi* anterior;
 
-		//struct wireless_scan_mi* old_device;
-
 		celula_atual = context.result;
+
+		current_device = list->head_list;
+
+		while(current_device != NULL){
+
+			current_device->lastsee = 0;
+
+			current_device = current_device->next;
+
+		}
 
 		while(celula_atual != NULL){
 
-//				old_device = current_device;
+			current_device = list->head_list;
+
+			while(current_device != NULL){
+
+				iw_ether_ntop((const struct ether_addr *) &celula_atual->ap_addr.sa_data, buffer);
+				if(!strcmp(current_device->mac_address,buffer)){
+					break;
+				}
+
+				current_device = current_device->next;
+			}
+
+			if(current_device == NULL){
 
 				current_device = (struct wireless_scan_mi *)malloc(sizeof(struct wireless_scan_mi));
 
-//				if(list->head_list == NULL)
-	//				list->head_list = current_device;
-		//		else
-			//		old_device->next = current_device;
+				memset(current_device,0,sizeof(struct wireless_scan_mi));
 
+				current_device->lastsee = 1;
+
+				memcpy(&current_device->time_lastsee,&list->time,sizeof(struct timeval));
 
 				/* Imprime Endere��o f��sico */
 				current_device->type = 0;
@@ -622,11 +781,17 @@ int iw_scan_wifiv2(char *ifname, wireless_scan_mi_list* list){
 				current_device->frequencia = (float)celula_atual->b.freq;
 
 				current_device->qualidade = (float)(celula_atual->stats.qual.qual/70.0) *100.0;
+				current_device->qual_sum =current_device->qual_sum + current_device->qualidade;
+				current_device->qual_cont++;
+				current_device->qual_avg  = current_device->qual_sum / current_device->qual_cont;
 
 				if (celula_atual->stats.qual.level > 64)
 					level  = celula_atual->stats.qual.level - 0x100;
 
 				current_device->nivel = level;
+				current_device->sum_level = (float)(current_device->sum_level + current_device->nivel);
+				current_device->cont_level++;
+				current_device->avg_level = (float)(current_device->sum_level/current_device->cont_level);
 
 				current_device->maxbitrate = celula_atual->maxbitrate.value;
 
@@ -635,13 +800,17 @@ int iw_scan_wifiv2(char *ifname, wireless_scan_mi_list* list){
 				strcpy(current_device->essid,celula_atual->b.essid);
 
 				current_device->factor_overlap = (list->fator_sobreposicao[current_device->canal-1] - (100 + current_device->nivel));
+				current_device->sum_olf = current_device->sum_olf + current_device->factor_overlap;
+				current_device->cont_olf++;
+				current_device->avg_olf = current_device->sum_olf/current_device->cont_olf;
 
 				if(!(current_device->key) && (current_device->qualidade >= 75.0) && (current_device->nivel> -60))
-						list->factor_diversity++;
+					list->factor_diversity++;
 
 
 				if(list->head_list == NULL){
 					current_device->next = NULL;
+					current_device->previus = NULL;
 					list->head_list = current_device;
 				}
 				else{
@@ -649,7 +818,7 @@ int iw_scan_wifiv2(char *ifname, wireless_scan_mi_list* list){
 					p = list->head_list;
 					anterior = NULL;
 
-				/*procura posicao para insercao*/
+					/*procura posicao para insercao*/
 					while(p != NULL && p->factor_overlap < current_device->factor_overlap)
 					{
 						anterior = p;
@@ -658,27 +827,73 @@ int iw_scan_wifiv2(char *ifname, wireless_scan_mi_list* list){
 
 					if(anterior == NULL){
 						current_device->next = list->head_list;
+						current_device->previus = anterior;
 						list->head_list = current_device;
 					}
 					else{
 						anterior->next = current_device;
+						current_device->previus = anterior;
 						current_device->next = p;
 					}
-
 				}
 
 				list->end_list = current_device;
 
 				cont++;
+			}else{
 
-				celula_atual = celula_atual->next;
+				memcpy(&current_device->time_lastsee,&list->time,sizeof(struct timeval));
+
+				current_device->lastsee = 1;
+
+				/* Imprime Endere��o f��sico */
+				current_device->type = 0;
+
+				strcpy(current_device->mac_address,buffer);
+
+				celula_atual->b.key_flags |= IW_ENCODE_NOKEY;
+				if(celula_atual->b.key_flags & IW_ENCODE_DISABLED)
+					current_device->key = 0;
+				else
+					current_device->key = 1;
+
+				current_device->canal = freq2canal(celula_atual->b.freq);
+
+				current_device->frequencia = (float)celula_atual->b.freq;
+
+				current_device->qualidade = (float)(celula_atual->stats.qual.qual/70.0) *100.0;
+				current_device->qual_sum =current_device->qual_sum + current_device->qualidade;
+				current_device->qual_cont++;
+				current_device->qual_avg  = current_device->qual_sum / current_device->qual_cont;
+
+				if (celula_atual->stats.qual.level > 64)
+					level  = celula_atual->stats.qual.level - 0x100;
+
+				current_device->nivel = level;
+
+				current_device->sum_level = (float)(current_device->sum_level + current_device->nivel);
+				current_device->cont_level++;
+				current_device->avg_level = (float)(current_device->sum_level/current_device->cont_level);
+
+				current_device->maxbitrate = celula_atual->maxbitrate.value;
+
+				strcpy(current_device->modo,iw_operation_mode[celula_atual->b.mode]);
+
+				strcpy(current_device->essid,celula_atual->b.essid);
+
+				current_device->factor_overlap = (list->fator_sobreposicao[current_device->canal-1] - (100 + current_device->nivel));
+				current_device->sum_olf = current_device->sum_olf + current_device->factor_overlap;
+				current_device->cont_olf++;
+				current_device->avg_olf = current_device->sum_olf/current_device->cont_olf;
+
+			}
+
+			celula_atual = celula_atual->next;
 		};
 
 		limpar_iw_scan(&context);
 
 		iw_sockets_close(skfd);
-
-		gettimeofday(&list->time,NULL);
 
 		verify_best_channels(list->melhores_canais,list->fator_sobreposicao);
 
@@ -687,223 +902,10 @@ int iw_scan_wifiv2(char *ifname, wireless_scan_mi_list* list){
 		list->size_list = list->size_list + cont;
 
 		return 0;
-}
 
-int iw_scan_wifiv3(char *ifname, wireless_scan_mi_list* list){
+	}
 
-		int 				skfd;			/* generic raw socket desc.	*/
-		int 				we_version;
-		wireless_scan_head 	context;
-		int 				cont = 0;
-
-		we_version = iw_get_kernel_we_version();
-
-
-		if((skfd = iw_sockets_open()) < 0){
-				perror("socket");
-				return -1;
-		}
-
-				// Varre o espectro
-		iw_scan(skfd,ifname,we_version,&context);
-
-		gettimeofday(&list->time,NULL);
-
-		if(context.result != NULL){
-
-				zerar_vetores(list->channel_util,list->fator_sobreposicao);
-
-				verifica_Canaisv2(list->channel_util,&context);
-
-				// Calcula o Fator de sobreposicao
-				calcula_FatorSbr(list->channel_util,list->fator_sobreposicao);
-
-				char 			buffer[100];
-				int 				 level ;
-				wireless_scan* celula_atual;
-
-				struct wireless_scan_mi* p;
-				struct wireless_scan_mi* current_device;
-				struct wireless_scan_mi* anterior;
-
-				celula_atual = context.result;
-
-				current_device = list->head_list;
-
-				while(current_device != NULL){
-
-					current_device->lastsee = 0;
-
-					current_device = current_device->next;
-
-				}
-
-				while(celula_atual != NULL){
-
-						current_device = list->head_list;
-
-						while(current_device != NULL){
-
-								iw_ether_ntop((const struct ether_addr *) &celula_atual->ap_addr.sa_data, buffer);
-								if(!strcmp(current_device->mac_address,buffer)){
-									break;
-								}
-
-								current_device = current_device->next;
-						}
-
-						if(current_device == NULL){
-
-							current_device = (struct wireless_scan_mi *)malloc(sizeof(struct wireless_scan_mi));
-
-							memset(current_device,0,sizeof(struct wireless_scan_mi));
-
-							current_device->lastsee = 1;
-
-							memcpy(&current_device->time_lastsee,&list->time,sizeof(struct timeval));
-
-						/* Imprime Endere��o f��sico */
-							current_device->type = 0;
-
-							iw_ether_ntop((const struct ether_addr *) &celula_atual->ap_addr.sa_data, buffer);
-							strcpy(current_device->mac_address,buffer);
-
-							celula_atual->b.key_flags |= IW_ENCODE_NOKEY;
-							if(celula_atual->b.key_flags & IW_ENCODE_DISABLED)
-								current_device->key = 0;
-							else
-								current_device->key = 1;
-
-							current_device->canal = freq2canal(celula_atual->b.freq);
-
-							current_device->frequencia = (float)celula_atual->b.freq;
-
-							current_device->qualidade = (float)(celula_atual->stats.qual.qual/70.0) *100.0;
-							current_device->qual_sum =current_device->qual_sum + current_device->qualidade;
-							current_device->qual_cont++;
-							current_device->qual_avg  = current_device->qual_sum / current_device->qual_cont;
-
-							if (celula_atual->stats.qual.level > 64)
-								level  = celula_atual->stats.qual.level - 0x100;
-
-							current_device->nivel = level;
-							current_device->sum_level = (float)(current_device->sum_level + current_device->nivel);
-							current_device->cont_level++;
-							current_device->avg_level = (float)(current_device->sum_level/current_device->cont_level);
-
-							current_device->maxbitrate = celula_atual->maxbitrate.value;
-
-							strcpy(current_device->modo,iw_operation_mode[celula_atual->b.mode]);
-
-							strcpy(current_device->essid,celula_atual->b.essid);
-
-							current_device->factor_overlap = (list->fator_sobreposicao[current_device->canal-1] - (100 + current_device->nivel));
-							current_device->sum_olf = current_device->sum_olf + current_device->factor_overlap;
-							current_device->cont_olf++;
-							current_device->avg_olf = current_device->sum_olf/current_device->cont_olf;
-
-							if(!(current_device->key) && (current_device->qualidade >= 75.0) && (current_device->nivel> -60))
-								list->factor_diversity++;
-
-
-							if(list->head_list == NULL){
-								current_device->next = NULL;
-								current_device->previus = NULL;
-								list->head_list = current_device;
-							}
-							else{
-
-								p = list->head_list;
-								anterior = NULL;
-
-							/*procura posicao para insercao*/
-								while(p != NULL && p->factor_overlap < current_device->factor_overlap)
-								{
-									anterior = p;
-									p = p->next;
-								}
-
-								if(anterior == NULL){
-									current_device->next = list->head_list;
-									current_device->previus = anterior;
-									list->head_list = current_device;
-								}
-								else{
-									anterior->next = current_device;
-									current_device->previus = anterior;
-									current_device->next = p;
-								}
-							}
-
-							list->end_list = current_device;
-
-							cont++;
-						}else{
-
-							memcpy(&current_device->time_lastsee,&list->time,sizeof(struct timeval));
-
-							current_device->lastsee = 1;
-
-							/* Imprime Endere��o f��sico */
-							current_device->type = 0;
-
-							strcpy(current_device->mac_address,buffer);
-
-							celula_atual->b.key_flags |= IW_ENCODE_NOKEY;
-							if(celula_atual->b.key_flags & IW_ENCODE_DISABLED)
-								current_device->key = 0;
-							else
-								current_device->key = 1;
-
-							current_device->canal = freq2canal(celula_atual->b.freq);
-
-							current_device->frequencia = (float)celula_atual->b.freq;
-
-							current_device->qualidade = (float)(celula_atual->stats.qual.qual/70.0) *100.0;
-							current_device->qual_sum =current_device->qual_sum + current_device->qualidade;
-							current_device->qual_cont++;
-							current_device->qual_avg  = current_device->qual_sum / current_device->qual_cont;
-
-							if (celula_atual->stats.qual.level > 64)
-								level  = celula_atual->stats.qual.level - 0x100;
-
-							current_device->nivel = level;
-
-							current_device->sum_level = (float)(current_device->sum_level + current_device->nivel);
-							current_device->cont_level++;
-							current_device->avg_level = (float)(current_device->sum_level/current_device->cont_level);
-
-							current_device->maxbitrate = celula_atual->maxbitrate.value;
-
-							strcpy(current_device->modo,iw_operation_mode[celula_atual->b.mode]);
-
-							strcpy(current_device->essid,celula_atual->b.essid);
-
-							current_device->factor_overlap = (list->fator_sobreposicao[current_device->canal-1] - (100 + current_device->nivel));
-							current_device->sum_olf = current_device->sum_olf + current_device->factor_overlap;
-							current_device->cont_olf++;
-							current_device->avg_olf = current_device->sum_olf/current_device->cont_olf;
-
-						}
-
-						celula_atual = celula_atual->next;
-				};
-
-				limpar_iw_scan(&context);
-
-				iw_sockets_close(skfd);
-
-				verify_best_channels(list->melhores_canais,list->fator_sobreposicao);
-
-				score_net_snr(list);
-
-				list->size_list = list->size_list + cont;
-
-				return 0;
-
-		}
-
-		return 1;
+	return 1;
 }
 
 
@@ -928,207 +930,207 @@ wireless_scan_mi* find_wifinet(wireless_scan_mi_list* list, wireless_scan_mi* wi
 
 static int
 get_info(int			skfd,
-	 char *			ifname,
-	 struct wireless_info *	info)
+		char *			ifname,
+		struct wireless_info *	info)
 {
-  struct iwreq		wrq;
+	struct iwreq		wrq;
 
-  memset((char *) info, 0, sizeof(struct wireless_info));
+	memset((char *) info, 0, sizeof(struct wireless_info));
 
-  /* Get basic information */
-  if(iw_get_basic_config(skfd, ifname, &(info->b)) < 0)
-    {
-      /* If no wireless name : no wireless extensions */
-      /* But let's check if the interface exists at all */
-      struct ifreq ifr;
+	/* Get basic information */
+	if(iw_get_basic_config(skfd, ifname, &(info->b)) < 0)
+	{
+		/* If no wireless name : no wireless extensions */
+		/* But let's check if the interface exists at all */
+		struct ifreq ifr;
 
-      strncpy(ifr.ifr_name, ifname, IFNAMSIZ);
-      if(ioctl(skfd, SIOCGIFFLAGS, &ifr) < 0)
-	return(-ENODEV);
-      else
-	return(-ENOTSUP);
-    }
+		strncpy(ifr.ifr_name, ifname, IFNAMSIZ);
+		if(ioctl(skfd, SIOCGIFFLAGS, &ifr) < 0)
+			return(-ENODEV);
+		else
+			return(-ENOTSUP);
+	}
 
-  /* Get ranges */
-  if(iw_get_range_info(skfd, ifname, &(info->range)) >= 0)
-    info->has_range = 1;
+	/* Get ranges */
+	if(iw_get_range_info(skfd, ifname, &(info->range)) >= 0)
+		info->has_range = 1;
 
-  /* Get AP address */
-  if(iw_get_ext(skfd, ifname, SIOCGIWAP, &wrq) >= 0)
-    {
-      info->has_ap_addr = 1;
-      memcpy(&(info->ap_addr), &(wrq.u.ap_addr), sizeof (sockaddr));
-    }
+	/* Get AP address */
+	if(iw_get_ext(skfd, ifname, SIOCGIWAP, &wrq) >= 0)
+	{
+		info->has_ap_addr = 1;
+		memcpy(&(info->ap_addr), &(wrq.u.ap_addr), sizeof (sockaddr));
+	}
 
-  /* Get bit rate */
-  if(iw_get_ext(skfd, ifname, SIOCGIWRATE, &wrq) >= 0)
-    {
-      info->has_bitrate = 1;
-      memcpy(&(info->bitrate), &(wrq.u.bitrate), sizeof(iwparam));
-    }
+	/* Get bit rate */
+	if(iw_get_ext(skfd, ifname, SIOCGIWRATE, &wrq) >= 0)
+	{
+		info->has_bitrate = 1;
+		memcpy(&(info->bitrate), &(wrq.u.bitrate), sizeof(iwparam));
+	}
 
-  /* Get Power Management settings */
-  wrq.u.power.flags = 0;
-  if(iw_get_ext(skfd, ifname, SIOCGIWPOWER, &wrq) >= 0)
-    {
-      info->has_power = 1;
-      memcpy(&(info->power), &(wrq.u.power), sizeof(iwparam));
-    }
+	/* Get Power Management settings */
+	wrq.u.power.flags = 0;
+	if(iw_get_ext(skfd, ifname, SIOCGIWPOWER, &wrq) >= 0)
+	{
+		info->has_power = 1;
+		memcpy(&(info->power), &(wrq.u.power), sizeof(iwparam));
+	}
 
 
-  /* Get stats */
-  if(iw_get_stats(skfd, ifname, &(info->stats),
-		  &info->range, info->has_range) >= 0)
-    {
-      info->has_stats = 1;
-    }
+	/* Get stats */
+	if(iw_get_stats(skfd, ifname, &(info->stats),
+			&info->range, info->has_range) >= 0)
+	{
+		info->has_stats = 1;
+	}
 
 #ifndef WE_ESSENTIAL
-  /* Get NickName */
-  wrq.u.essid.pointer = (caddr_t) info->nickname;
-  wrq.u.essid.length = IW_ESSID_MAX_SIZE + 1;
-  wrq.u.essid.flags = 0;
-  if(iw_get_ext(skfd, ifname, SIOCGIWNICKN, &wrq) >= 0)
-    if(wrq.u.data.length > 1)
-      info->has_nickname = 1;
+	/* Get NickName */
+	wrq.u.essid.pointer = (caddr_t) info->nickname;
+	wrq.u.essid.length = IW_ESSID_MAX_SIZE + 1;
+	wrq.u.essid.flags = 0;
+	if(iw_get_ext(skfd, ifname, SIOCGIWNICKN, &wrq) >= 0)
+		if(wrq.u.data.length > 1)
+			info->has_nickname = 1;
 
-  if((info->has_range) && (info->range.we_version_compiled > 9))
-    {
-      /* Get Transmit Power */
-      if(iw_get_ext(skfd, ifname, SIOCGIWTXPOW, &wrq) >= 0)
+	if((info->has_range) && (info->range.we_version_compiled > 9))
 	{
-	  info->has_txpower = 1;
-	  memcpy(&(info->txpower), &(wrq.u.txpower), sizeof(iwparam));
+		/* Get Transmit Power */
+		if(iw_get_ext(skfd, ifname, SIOCGIWTXPOW, &wrq) >= 0)
+		{
+			info->has_txpower = 1;
+			memcpy(&(info->txpower), &(wrq.u.txpower), sizeof(iwparam));
+		}
 	}
-    }
 
-  /* Get sensitivity */
-  if(iw_get_ext(skfd, ifname, SIOCGIWSENS, &wrq) >= 0)
-    {
-      info->has_sens = 1;
-      memcpy(&(info->sens), &(wrq.u.sens), sizeof(iwparam));
-    }
-
-  if((info->has_range) && (info->range.we_version_compiled > 10))
-    {
-      /* Get retry limit/lifetime */
-      if(iw_get_ext(skfd, ifname, SIOCGIWRETRY, &wrq) >= 0)
+	/* Get sensitivity */
+	if(iw_get_ext(skfd, ifname, SIOCGIWSENS, &wrq) >= 0)
 	{
-	  info->has_retry = 1;
-	  memcpy(&(info->retry), &(wrq.u.retry), sizeof(iwparam));
+		info->has_sens = 1;
+		memcpy(&(info->sens), &(wrq.u.sens), sizeof(iwparam));
 	}
-    }
 
-  /* Get RTS threshold */
-  if(iw_get_ext(skfd, ifname, SIOCGIWRTS, &wrq) >= 0)
-    {
-      info->has_rts = 1;
-      memcpy(&(info->rts), &(wrq.u.rts), sizeof(iwparam));
-    }
+	if((info->has_range) && (info->range.we_version_compiled > 10))
+	{
+		/* Get retry limit/lifetime */
+		if(iw_get_ext(skfd, ifname, SIOCGIWRETRY, &wrq) >= 0)
+		{
+			info->has_retry = 1;
+			memcpy(&(info->retry), &(wrq.u.retry), sizeof(iwparam));
+		}
+	}
 
-  /* Get fragmentation threshold */
-  if(iw_get_ext(skfd, ifname, SIOCGIWFRAG, &wrq) >= 0)
-    {
-      info->has_frag = 1;
-      memcpy(&(info->frag), &(wrq.u.frag), sizeof(iwparam));
-    }
+	/* Get RTS threshold */
+	if(iw_get_ext(skfd, ifname, SIOCGIWRTS, &wrq) >= 0)
+	{
+		info->has_rts = 1;
+		memcpy(&(info->rts), &(wrq.u.rts), sizeof(iwparam));
+	}
+
+	/* Get fragmentation threshold */
+	if(iw_get_ext(skfd, ifname, SIOCGIWFRAG, &wrq) >= 0)
+	{
+		info->has_frag = 1;
+		memcpy(&(info->frag), &(wrq.u.frag), sizeof(iwparam));
+	}
 #endif	/* WE_ESSENTIAL */
 
-  return(0);
+	return(0);
 }
 
 int get_rssi_info(char* ifname, wireless_scan_mi* wifinet){
 
-		int 				skfd;			/* generic raw socket desc.	*/
-		struct wireless_info 	info;
+	int 				skfd;			/* generic raw socket desc.	*/
+	struct wireless_info 	info;
 
-		if((skfd = iw_sockets_open()) < 0){
-				perror("socket");
-				return -100;
-		}
-
-		get_info(skfd,ifname,&info);
-
-		int 				 level  = -100;
-
-		wifinet->connected  = (int)info.b.freq;
-
-		if (wifinet->connected){
-
-			if (info.stats.qual.level > 64){
-				level  = info.stats.qual.level - 0x100;
-				iw_sockets_close(skfd);
-				return level;
-			}
-
-		}
-
-		iw_sockets_close(skfd);
+	if((skfd = iw_sockets_open()) < 0){
+		perror("socket");
 		return -100;
+	}
+
+	get_info(skfd,ifname,&info);
+
+	int 				 level  = -100;
+
+	wifinet->connected  = (int)info.b.freq;
+
+	if (wifinet->connected){
+
+		if (info.stats.qual.level > 64){
+			level  = info.stats.qual.level - 0x100;
+			iw_sockets_close(skfd);
+			return level;
+		}
+
+	}
+
+	iw_sockets_close(skfd);
+	return -100;
 }
 
 
 int get_mywifi_info(char* ifname, wireless_scan_mi* wifinet){
 
-		int 				skfd;			/* generic raw socket desc.	*/
-		struct wireless_info 	info;
+	int 				skfd;			/* generic raw socket desc.	*/
+	struct wireless_info 	info;
 
-		if((skfd = iw_sockets_open()) < 0){
-				perror("socket");
-				return -1;
-		}
+	if((skfd = iw_sockets_open()) < 0){
+		perror("socket");
+		return -1;
+	}
 
-		get_info(skfd,ifname,&info);
+	get_info(skfd,ifname,&info);
 
-		char 			buffer[100];
-		int 				 level ;
+	char 			buffer[100];
+	int 				 level =0;
 
-		wifinet->connected  = (int)info.b.freq;
+	wifinet->connected  = (int)info.b.freq;
 
-		if (wifinet->connected){
-				/* Imprime Endere��o f��sico */
-				strcpy(wifinet->protocol,info.b.name);
+	if (wifinet->connected){
+		/* Imprime Endere��o f��sico */
+		strcpy(wifinet->protocol,info.b.name);
 
-				iw_ether_ntop((const struct ether_addr *) &info.ap_addr.sa_data, buffer);
-				strcpy(wifinet->mac_address,buffer);
+		iw_ether_ntop((const struct ether_addr *) &info.ap_addr.sa_data, buffer);
+		strcpy(wifinet->mac_address,buffer);
 
-				info.b.key_flags |= IW_ENCODE_NOKEY;
-				if(info.b.key_flags & IW_ENCODE_DISABLED)
-					wifinet->key = 0;
-				else
-					wifinet->key = 1;
+		info.b.key_flags |= IW_ENCODE_NOKEY;
+		if(info.b.key_flags & IW_ENCODE_DISABLED)
+			wifinet->key = 0;
+		else
+			wifinet->key = 1;
 
-				wifinet->canal = freq2canal(info.b.freq);
+		wifinet->canal = freq2canal(info.b.freq);
 
-				wifinet->frequencia = (float)info.b.freq;
+		wifinet->frequencia = (float)info.b.freq;
 
-				wifinet->qualidade = (float)(info.stats.qual.qual/70.0) *100.0;
+		wifinet->qualidade = (float)(info.stats.qual.qual/70.0) *100.0;
 
-				if (info.stats.qual.level > 64)
-					level  = info.stats.qual.level - 0x100;
+		if (info.stats.qual.level > 64)
+			level  = info.stats.qual.level - 0x100;
 
-				wifinet->nivel = level;
+		wifinet->nivel = level;
 
-				wifinet->maxbitrate = info.bitrate.value;
+		wifinet->maxbitrate = info.bitrate.value;
 
-				strcpy(wifinet->modo,iw_operation_mode[info.b.mode]);
+		strcpy(wifinet->modo,iw_operation_mode[info.b.mode]);
 
-				strcpy(wifinet->essid,info.b.essid);
+		strcpy(wifinet->essid,info.b.essid);
 
-			}
+	}
 
-			iw_sockets_close(skfd);
+	iw_sockets_close(skfd);
 
-			return 0;
-		}
+	return 0;
+}
 
 
 
 void init_wifi_info(wireless_scan_mi_list* wifinet){
-		wifinet->head_list = NULL;
-		wifinet->end_list = NULL;
-		wifinet->size_list = 0;
-		wifinet->factor_diversity = 0;
+	wifinet->head_list = NULL;
+	wifinet->end_list = NULL;
+	wifinet->size_list = 0;
+	wifinet->factor_diversity = 0;
 }
 
 void fprintf_mywifi_info(FILE * 	 file, wireless_scan_mi* wifinet)
@@ -1155,30 +1157,30 @@ void fprintf_mywifi_info(FILE * 	 file, wireless_scan_mi* wifinet)
 
 int fprint_current_net(int itr, wireless_scan_mi* wifinet, char* filename){
 
-	 FILE *file;
-	 struct timeval time;
-	 struct tm *temp;
+	FILE *file;
+	struct timeval time;
+	struct tm *temp;
 
-	 gettimeofday(&time,NULL);
+	gettimeofday(&time,NULL);
 
-	 temp = localtime(&time.tv_sec);
+	temp = localtime(&time.tv_sec);
 
-	  if (itr == 0){
-		  	  file = fopen(filename,"w");
-			  fprintf(file,"#Date\t\tHour\tSample\tProtocolo\tMAC Address\t\tChannel\tFreqGhz\tBitrate\tQual\tSignal\tESSID\n"); //Cabeçalho
-	  }else
-	  	  	  file = fopen(filename,"a");
+	if (itr == 0){
+		file = fopen(filename,"w");
+		fprintf(file,"#Date\t\tHour\tSample\tProtocolo\tMAC Address\t\tChannel\tFreqGhz\tBitrate\tQual\tSignal\tESSID\n"); //Cabeçalho
+	}else
+		file = fopen(filename,"a");
 
-	  fprintf(file,"%02d/%02d/%02d\t%02d:%02d:%02d %02d\t",
-	  				temp->tm_mday,temp->tm_mon,temp->tm_year+1900,
-	  				temp->tm_hour,temp->tm_min,temp->tm_sec,
-	  				itr);
+	fprintf(file,"%02d/%02d/%02d\t%02d:%02d:%02d %02d\t",
+			temp->tm_mday,temp->tm_mon,temp->tm_year+1900,
+			temp->tm_hour,temp->tm_min,temp->tm_sec,
+			itr);
 
-	  fprintf_mywifi_info(file,wifinet);
+	fprintf_mywifi_info(file,wifinet);
 
-	  fclose(file);
+	fclose(file);
 
-	  return 0;
+	return 0;
 }
 
 int print_scan_mi(wireless_scan_mi_list* list){
@@ -1261,7 +1263,7 @@ int print_scan_mi(wireless_scan_mi_list* list){
 
 int fprint_scan_mi(int itr, wireless_scan_mi_list* list){
 
-	#define SUBD "./nets/"
+#define SUBD "./nets/"
 
 	char filename[50];
 	wireless_scan_mi* current_device;
@@ -1275,7 +1277,7 @@ int fprint_scan_mi(int itr, wireless_scan_mi_list* list){
 	struct stat st = {0};
 
 	if (stat(SUBD, &st) == -1)
-	    mkdir(SUBD, 0755);
+		mkdir(SUBD, 0755);
 
 	while(current_device != NULL){
 
@@ -1352,9 +1354,9 @@ int fprint_olf(int itr, wireless_scan_mi_list* list, char* filename){
 		file = fopen(filename,"a");
 
 	fprintf(file,"%02d/%02d/%02d\t%02d:%02d:%02d %02d\t",
-					temp->tm_mday,temp->tm_mon,temp->tm_year+1900,
-					temp->tm_hour,temp->tm_min,temp->tm_sec,
-					itr);
+			temp->tm_mday,temp->tm_mon,temp->tm_year+1900,
+			temp->tm_hour,temp->tm_min,temp->tm_sec,
+			itr);
 
 	for(i = 0; i < CANAL ; i++)
 		fprintf(file,"%0.2f\t",list->fator_sobreposicao[i]);
@@ -1383,9 +1385,9 @@ int fprint_best_channels(int itr, wireless_scan_mi_list* list, char* filename){
 		file = fopen(filename,"a");
 
 	fprintf(file,"%02d/%02d/%02d\t%02d:%02d:%02d %02d\t",
-				temp->tm_mday,temp->tm_mon,temp->tm_year+1900,
-				temp->tm_hour,temp->tm_min,temp->tm_sec,
-				itr);
+			temp->tm_mday,temp->tm_mon,temp->tm_year+1900,
+			temp->tm_hour,temp->tm_min,temp->tm_sec,
+			itr);
 
 	for(i = 0; i < CANAL ; i++){
 		if(list->melhores_canais[i])
@@ -1489,28 +1491,28 @@ int save_scan_mi_file(wireless_scan_mi_list* list, time_t currentTime){
 
 			while(current_device != NULL){
 
-					snprintf(string,SIZEQUERY,"%d-%d-%d;%d:%d:%d;wifi;%s;%d;%d;%0.2f;%0.2f;%d;%d;%s;%0.2f;%d/%d;%s\n",
-								timeinfo->tm_year+1900,timeinfo->tm_mon,timeinfo->tm_mday,
-								timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
-								current_device->mac_address,
-								current_device->key,
-								current_device->canal,
-								current_device->frequencia,
-								current_device->qualidade,
-								current_device->nivel,
-								current_device->maxbitrate,
-								current_device->modo,
-								current_device->factor_overlap,
-								current_device->score_snr,
-								list->size_list,
-								current_device->essid);
+				snprintf(string,SIZEQUERY,"%d-%d-%d;%d:%d:%d;wifi;%s;%d;%d;%0.2f;%0.2f;%d;%d;%s;%0.2f;%d/%d;%s\n",
+						timeinfo->tm_year+1900,timeinfo->tm_mon,timeinfo->tm_mday,
+						timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
+						current_device->mac_address,
+						current_device->key,
+						current_device->canal,
+						current_device->frequencia,
+						current_device->qualidade,
+						current_device->nivel,
+						current_device->maxbitrate,
+						current_device->modo,
+						current_device->factor_overlap,
+						current_device->score_snr,
+						list->size_list,
+						current_device->essid);
 
-								if(EOF == fputs(string,arquivo))
-									printf("Erro ao gravar lista de redes detectadas");
+				if(EOF == fputs(string,arquivo))
+					printf("Erro ao gravar lista de redes detectadas");
 
-								current_device = current_device->next;
+				current_device = current_device->next;
 
-				};
+			};
 
 		}
 		else
@@ -1538,8 +1540,8 @@ int save_scan_mi_file(wireless_scan_mi_list* list, time_t currentTime){
 			}
 
 			snprintf(string,SIZEQUERY,"%d-%d-%d;%d:%d:%d;",
-				timeinfo->tm_year+1900,timeinfo->tm_mon,timeinfo->tm_mday,
-				timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+					timeinfo->tm_year+1900,timeinfo->tm_mon,timeinfo->tm_mday,
+					timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 
 			if(EOF == fputs(string,arquivo))
 				printf("Erro ao gravar lista de fatores de sobreposicao de canais");
@@ -1556,9 +1558,9 @@ int save_scan_mi_file(wireless_scan_mi_list* list, time_t currentTime){
 			if(EOF == fputs(string,arquivo))
 				printf("Erro ao gravar lista de fatores de sobreposicao de canais");
 
-			}else{
-				printf("Erro ao abrir arquivo fscanais.txt");
-			}
+		}else{
+			printf("Erro ao abrir arquivo fscanais.txt");
+		}
 
 		fclose(arquivo);
 
@@ -1584,9 +1586,9 @@ int update_statistics(wireless_scan_mi* device){
 	device->avg_score =  device->sum_score/device->cont_score;
 
 	if(device->service != -1){
-			device->sum_service = device->sum_service + (float)device->service;
-			device->cont_service++;
-			device->avg_service = (float)(device->sum_service/device->cont_service);
+		device->sum_service = device->sum_service + (float)device->service;
+		device->cont_service++;
+		device->avg_service = (float)(device->sum_service/device->cont_service);
 	}
 
 	return 0;
@@ -1610,7 +1612,7 @@ int varredura(wireless_scan_mi_list* list){
 	/* Pega a hora atual do sistema. */
 	currentTime= time(NULL);
 
-    /* Converte-o em uma estrutura tm. */
+	/* Converte-o em uma estrutura tm. */
 	timeinfo= localtime(&currentTime);
 
 	/* Apresenta a hora atual no formato horas:minutos:segundos */
@@ -1622,7 +1624,6 @@ int varredura(wireless_scan_mi_list* list){
 
 	return 0;
 }
-
 
 
 

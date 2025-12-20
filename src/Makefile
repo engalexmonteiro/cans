@@ -22,20 +22,22 @@ PKG_LIBS := \
 
 
 
-PKG_CFLAGS := $(shell pkg-config --libs --cflags $(PKG_LIBS))
+PKG_CFLAGS := $(shell pkg-config --cflags $(PKG_LIBS))
 PKG_LDFLAGS := $(shell pkg-config --libs $(PKG_LIBS))
 
 # =========================
 # Flags gerais
 # =========================
 CFLAGS  := -Wall -Wextra -O2 $(PKG_CFLAGS)
-LDFLAGS := $(PKG_CFLAGS) -liw -lbluetooth -lacpi
+LDFLAGS := $(PKG_LDFLAGS)
+LDLIBS  := -liw -lbluetooth -lacpi -lm
 
 TARGET  := cans
 PREFIX  := /usr/local
 BINDIR  := $(PREFIX)/bin
 
-SRC := $(wildcard src/*.c)
+MAKEFILE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+SRC := $(shell find $(MAKEFILE_DIR) -name '*.c')
 OBJ := $(SRC:.c=.o)
 
 # =========================
@@ -69,10 +71,10 @@ check-libs:
 # Build
 # =========================
 $(TARGET): $(OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS) -liw -lm -lacpi
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-src/%.o: src/%.c
-	$(CC) $(LDFLAGS) -c $< -o $@
+$(MAKEFILE_DIR)/%.o: $(MAKEFILE_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # =========================
 # Execução

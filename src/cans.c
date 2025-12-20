@@ -116,6 +116,8 @@ static float speed = 0;
 
 static mobile_device md;
 
+int gathering_infoctx(void);
+
 int monitor_mode(mobile_device *md){
 
 	struct tm *temp;

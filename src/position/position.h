@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <gps.h>
+#include <math.h>
 
 int getGPSData(struct gps_data_t *gpsdata);
 

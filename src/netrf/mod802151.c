@@ -8,7 +8,7 @@
 
 #include "mod802151.h"
 
-static char UUID_str[MAX_LEN_UUID_STR];
+//static char UUID_str[MAX_LEN_UUID_STR];
 
 /* Pass args to the inquiry/search handler */
 struct search_context {
@@ -2709,7 +2709,7 @@ int connect_scan(int sock, int dev_id)
 	uint8_t lq;
 	int8_t level;
 
-	uint8_t type;
+	uint8_t type=0;
 	//uint8_t reason;
 	uint8_t mode, map[10];
 	int  map_afh_int[80];
@@ -2966,10 +2966,10 @@ int iw_scan_bluetooth(wireless_scan_mi_list* list){
 
     int dev_id, sock;
     inquiry_info *ii = NULL;
-    int max_rsp, num_rsp;
-    int len, flags;
+    int max_rsp=0, num_rsp;
+    int len=0, flags=0;
     int i;
-    char addr[19] = { 0 };
+    char addr[19] = "";
     char name[248] = { 0 };
 
 	wireless_scan_mi *current_cell;
@@ -2994,8 +2994,9 @@ int iw_scan_bluetooth(wireless_scan_mi_list* list){
 
     if(list->head_list == NULL)
         current_cell = list->head_list;
-    else
+    else{
      	current_cell = list->end_list->next;
+    }
 
    	for (i = 0; i < num_rsp; i++) {
 
@@ -3004,7 +3005,7 @@ int iw_scan_bluetooth(wireless_scan_mi_list* list){
 	  	   current_cell->type = 1;
 
            ba2str(&(ii+i)->bdaddr, addr);
-           memset(addr, 0, sizeof(name));
+           memset(addr, 0, sizeof(addr));
 
     	        //Read name
     	   if (hci_read_remote_name(sock, &(ii+i)->bdaddr, sizeof(name),name, 0) < 0)

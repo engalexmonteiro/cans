@@ -50,7 +50,7 @@ bool_t
 print_uptime(float * uptime)
 {
 	unsigned int tmp = 0, hour = 0, min = 0, sec = 0;
-	char hostname[30];
+	char hostname[30] = "";
 
 	tmp = (uint)(*uptime);
 	sec = tmp % 60;
@@ -125,7 +125,7 @@ fprint_max(FILE *arquivo, interface_t * interface)
 		max_whole++;
 		max_part -= 1000;
 	}
-	fprintf(arquivo ,"%7lu.%03u %7lu.%03u %7lu.%03u ",
+	fprintf(arquivo ,"%7lu.%03lu %7lu.%03lu %7lu.%03lu ",
 		   (*interface)->rx_max_whole, (*interface)->rx_max_part,
 		   (*interface)->tx_max_whole, (*interface)->tx_max_part,
 		   max_whole, max_part);

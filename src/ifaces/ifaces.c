@@ -141,13 +141,25 @@ int get_info_iface3g(struct iface_t *iface3g) {
 // --- Control Functions ---
 
 int enable_iface_all(int enable) {
+    // Convert int to gboolean (TRUE if non-zero, FALSE if zero)
+    gboolean setting = (enable != 0) ? TRUE : FALSE;
+
+    // Use g_autoptr for automatic memory management (requires GLib 2.44+)
     NMClient *client = get_client();
+
     if (client) {
-        nm_client_networking_set_enabled(client, enable, NULL);
-        g_object_unref(client);
+        /* * Updating global networking state via the GObject property system.
+         * This is the current standard for libnm.
+         */
+        g_object_set(G_OBJECT(client), NM_CLIENT_NETWORKING_ENABLED, setting, NULL);
+
+        return 0;
     }
-    return 0;
+
+    return -1;
 }
+
+
 
 int get_enabled_iface_wifi() {
     NMClient *client = get_client();
@@ -158,21 +170,41 @@ int get_enabled_iface_wifi() {
 }
 
 int enable_iface_wifi(int enable) {
+    // Internally convert int to gboolean
+    gboolean setting = (enable != 0) ? TRUE : FALSE;
+
+    // Use g_autoptr for automatic cleanup of the NMClient object
     NMClient *client = get_client();
+
     if (client) {
-        nm_client_wireless_set_enabled(client, enable);
-        g_object_unref(client);
+        /* * NM_CLIENT_WIFI_ENABLED is the modern property for toggling
+         * the Wi-Fi radio state in libnm.
+         */
+        g_object_set(G_OBJECT(client), NM_CLIENT_WIRELESS_ENABLED, setting, NULL);
+
+        return 0;
     }
-    return 0;
+
+    return -1;
 }
 
 int enable_iface_3g(int enable) {
+    // Convert int to gboolean internally
+    gboolean setting = (enable != 0) ? TRUE : FALSE;
+
+    // g_autoptr automatically handles g_object_unref when the scope ends
     NMClient *client = get_client();
+
     if (client) {
-        nm_client_wwan_set_enabled(client, enable);
-        g_object_unref(client);
+        /* * In libnm, radio switches are toggled via g_object_set.
+         * NM_CLIENT_WWAN_ENABLED controls the WWAN (3G/4G/5G) radio state.
+         */
+        g_object_set(G_OBJECT(client), NM_CLIENT_WWAN_ENABLED, setting, NULL);
+
+        return 0;
     }
-    return 0;
+
+    return -1;
 }
 
 int print_info_iface(struct iface_t *iface) {

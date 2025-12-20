@@ -61,7 +61,7 @@ int ping(char* target)
 	struct hostent *hp;
 	struct sockaddr_in to, from;
 	//struct protoent	*proto;
-	struct ip *ip;
+	//struct ip *ip;
 	u_char *packet, outpack[MAXPACKET];
 	char hnamebuf[MAXHOSTNAMELEN];
 	char *hostname;
@@ -159,7 +159,7 @@ int ping(char* target)
 			}
 
 			// Check the IP header
-			ip = (struct ip *)((char*)packet);
+			//ip = (struct ip *)((char*)packet);
 			hlen = sizeof( struct ip );
 			if (ret < (hlen + ICMP_MINLEN))
 			{

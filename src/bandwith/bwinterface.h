@@ -55,6 +55,7 @@ typedef struct total_interface {
 
 typedef struct host_interfaces {
 	struct timeval gth_time;
+	//const time_t gth_time;
 	char host[50];
 	int  number_iface;
 	int first_pass;
